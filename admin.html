@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin Panel - Start Countdown</title>
+  <style>
+    /* Reset some default margins */
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      background: linear-gradient(135deg, #1e3c72, #2a3284);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+      padding: 60px 20px 40px;
+      text-align: center;
+    }
+
+    img#logo {
+      width: 280px;
+      margin-bottom: 40px;
+      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.6));
+      transition: transform 0.3s ease;
+      cursor: default;
+    }
+    img#logo:hover {
+      transform: scale(1.05);
+    }
+
+    h1 {
+      font-weight: 700;
+      font-size: 2.6rem;
+      margin-bottom: 10px;
+      letter-spacing: 1.5px;
+      text-shadow: 1px 1px 4px rgba(0,0,0,0.7);
+    }
+
+    p.subtitle {
+      font-size: 1.1rem;
+      color: #a3bffa;
+      margin-bottom: 50px;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+    }
+
+    .buttons-container {
+      display: flex;
+      gap: 40px;
+      flex-wrap: wrap;
+      justify-content: center;
+      max-width: 600px;
+      width: 100%;
+    }
+
+    .sport-button {
+      flex: 1 1 200px;
+      padding: 18px 40px;
+      font-size: 22px;
+      border-radius: 14px;
+      border: none;
+      background: linear-gradient(45deg, #2a9d8f, #21867a);
+      color: white;
+      cursor: pointer;
+      font-weight: 600;
+      box-shadow: 0 8px 20px rgba(42, 157, 143, 0.5);
+      transition: 
+        background 0.3s ease,
+        box-shadow 0.3s ease,
+        transform 0.2s ease;
+      user-select: none;
+    }
+
+    .sport-button:hover, .sport-button:focus {
+      background: linear-gradient(45deg, #1f7f78, #16665f);
+      box-shadow: 0 12px 30px rgba(23, 124, 116, 0.7);
+      transform: translateY(-4px);
+      outline: none;
+    }
+
+    /* Modal styles - unchanged but polished */
+    .modal {
+      display: none; 
+      position: fixed;
+      z-index: 1000;
+      left: 0; top: 0;
+      width: 100%; height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.85);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+    }
+
+    .modal-content {
+      background-color: #2c2c40;
+      margin: 10% auto;
+      padding: 25px 30px;
+      border-radius: 16px;
+      width: 350px;
+      box-shadow: 0 0 25px rgba(0,0,0,0.7);
+      color: white;
+      text-align: center;
+      font-weight: 600;
+      user-select: none;
+    }
+
+    .modal-content h3 {
+      margin-top: 0;
+      margin-bottom: 25px;
+      font-size: 1.5rem;
+      letter-spacing: 1.2px;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.7);
+    }
+
+    select {
+      width: 100%;
+      padding: 12px 10px;
+      font-size: 17px;
+      border-radius: 12px;
+      border: none;
+      margin-bottom: 25px;
+      background-color: #3a3a5a;
+      color: white;
+      box-shadow: inset 0 2px 6px rgba(0,0,0,0.5);
+      appearance: none;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.3s ease;
+    }
+    select:hover, select:focus {
+      background-color: #4b4b7a;
+      outline: none;
+    }
+
+    .duration-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 30px;
+    }
+
+    .duration-button {
+      background-color: #2a9d8f;
+      border: none;
+      border-radius: 14px;
+      padding: 12px 18px;
+      font-size: 17px;
+      color: white;
+      cursor: pointer;
+      flex: 1;
+      margin: 0 6px;
+      font-weight: 700;
+      box-shadow: 0 6px 16px rgba(42, 157, 143, 0.45);
+      transition: 
+        background 0.3s ease,
+        box-shadow 0.3s ease,
+        transform 0.2s ease;
+      user-select: none;
+    }
+
+    .duration-button:hover {
+      background-color: #21867a;
+      box-shadow: 0 9px 24px rgba(33, 134, 122, 0.7);
+      transform: translateY(-3px);
+    }
+
+    .duration-button.selected {
+      background-color: #e9c46a;
+      color: #000;
+      box-shadow: 0 9px 28px rgba(233, 196, 106, 0.8);
+      transform: translateY(-4px);
+    }
+
+    .action-buttons {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+    }
+
+    .confirm-btn {
+      background-color: #2a9d8f;
+      border: none;
+      border-radius: 14px;
+      padding: 12px 25px;
+      font-size: 18px;
+      color: white;
+      cursor: pointer;
+      flex: 1;
+      font-weight: 700;
+      box-shadow: 0 8px 20px rgba(42, 157, 143, 0.6);
+      transition: background 0.3s ease, box-shadow 0.3s ease;
+      user-select: none;
+    }
+
+    .confirm-btn:hover {
+      background-color: #21867a;
+      box-shadow: 0 12px 30px rgba(33, 134, 122, 0.8);
+    }
+
+    .cancel-btn {
+      background-color: #e63946;
+      border: none;
+      border-radius: 14px;
+      padding: 12px 25px;
+      font-size: 18px;
+      color: white;
+      cursor: pointer;
+      flex: 1;
+      font-weight: 700;
+      box-shadow: 0 8px 20px rgba(230, 57, 70, 0.6);
+      transition: background 0.3s ease, box-shadow 0.3s ease;
+      user-select: none;
+    }
+
+    .cancel-btn:hover {
+      background-color: #b42b37;
+      box-shadow: 0 12px 30px rgba(180, 43, 55, 0.8);
+    }
+
+    /* Responsive tweaks */
+    @media (max-width: 420px) {
+      .buttons-container {
+        flex-direction: column;
+        gap: 25px;
+      }
+      .sport-button {
+        flex: none;
+        width: 100%;
+      }
+      .modal-content {
+        width: 90%;
+        margin: 15% auto;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <img id="logo" src="C:\Users\Manish Tomar\Desktop\REPPP white& blue logo.png" alt="Logo">
+
+  <h1>Welcome to the Admin Panel</h1>
+  <p class="subtitle">Start the countdown timer for courts</p>
+
+  <div class="buttons-container">
+    <button class="sport-button" onclick="openModal('padel')">Padel</button>
+    <button class="sport-button" onclick="openModal('pickleball')">Pickleball</button>
+  </div>
+
+  <!-- Modal -->
+  <div id="courtModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-content">
+      <h3 id="modalTitle">Select Court and Duration</h3>
+
+      <select id="courtSelect" aria-label="Select Court">
+        <!-- Courts will be filled dynamically -->
+      </select>
+
+      <div class="duration-buttons" role="group" aria-label="Select duration">
+        <button class="duration-button" onclick="selectDuration(this, 30)">30 min</button>
+        <button class="duration-button" onclick="selectDuration(this, 60)">60 min</button>
+        <button class="duration-button" onclick="selectDuration(this, 120)">120 min</button>
+      </div>
+
+      <div class="action-buttons">
+        <button class="confirm-btn" onclick="confirmStart()">Confirm</button>
+        <button class="cancel-btn" onclick="closeModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+  const modal = document.getElementById('courtModal');
+  const courtSelect = document.getElementById('courtSelect');
+  let selectedSport = "";
+  let selectedDuration = null;
+
+  const courts = {
+    padel: [
+      {value: "padel1", label: "Padel Court 1"},
+      {value: "padel2", label: "Padel Court 2"},
+      {value: "padel3", label: "Padel Court 3"},
+      {value: "padel4", label: "Padel Court 4"},
+      {value: "padel5", label: "Padel Court 5"},
+      {value: "padel6", label: "Padel Court 6"}
+    ],
+    pickleball: [
+      {value: "pickleball1", label: "Pickleball Court 1"},
+      {value: "pickleball2", label: "Pickleball Court 2"},
+      {value: "pickleball3", label: "Pickleball Court 3"},
+      {value: "pickleball4", label: "Pickleball Court 4"}
+    ]
+  };
+
+  function openModal(sport) {
+    selectedSport = sport;
+    // Clear previous courts
+    courtSelect.innerHTML = "";
+    courts[sport].forEach(court => {
+      const option = document.createElement('option');
+      option.value = court.value;
+      option.textContent = court.label;
+      courtSelect.appendChild(option);
+    });
+    // Reset duration selection
+    selectedDuration = null;
+    document.querySelectorAll('.duration-button').forEach(btn => btn.classList.remove('selected'));
+
+    modal.style.display = 'block';
+    courtSelect.focus();
+  }
+
+  function closeModal() {
+    modal.style.display = 'none';
+  }
+
+  function selectDuration(button, minutes) {
+    selectedDuration = minutes;
+    document.querySelectorAll('.duration-button').forEach(btn => btn.classList.remove('selected'));
+    button.classList.add('selected');
+  }
+
+  function confirmStart() {
+    const court = courtSelect.value;
+    if (!court) {
+      alert("Please select a court.");
+      return;
+    }
+    if (!selectedDuration) {
+      alert("Please select a duration.");
+      return;
+    }
+    // Implement start timer logic here or send data to server
+    alert(`Starting countdown for ${court} (${selectedDuration} minutes)`);
+    closeModal();
+  }
+
+  // Close modal when clicking outside content
+  window.onclick = function(event) {
+    if(event.target === modal) {
+      closeModal();
+    }
+  };
+
+  // Accessibility: close modal on Escape key
+  window.addEventListener('keydown', e => {
+    if (e.key === "Escape" && modal.style.display === 'block') {
+      closeModal();
+    }
+  });
+</script>
+</body>
+</html>

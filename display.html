@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Court Countdown Display</title>
+  <style>
+    body {
+      margin: 0;
+      background: #000;
+      color: #00ffcc;
+      font-family: 'Orbitron', sans-serif;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap');
+
+    h1 {
+      font-size: 60px;
+      margin-bottom: 10px;
+    }
+    #countdown {
+      font-size: 120px;
+      letter-spacing: 5px;
+      background: #111;
+      padding: 40px 60px;
+      border-radius: 20px;
+      box-shadow: 0 0 60px rgba(0, 255, 204, 0.8);
+    }
+  </style>
+</head>
+<body>
+  <h1>Live Court Time</h1>
+  <div id="countdown">00:00:00</div>
+
+  <script>
+    function updateCountdown() {
+      const start = parseInt(localStorage.getItem("countdownStart"));
+      const duration = parseInt(localStorage.getItem("countdownDuration"));
+      if (!start || !duration) {
+        document.getElementById("countdown").textContent = "00:00:00";
+        return;
+      }
+
+      const now = Date.now();
+      const elapsed = Math.floor((now - start) / 1000);
+      const remaining = duration - elapsed;
+
+      if (remaining <= 0) {
+        document.getElementById("countdown").textContent = "00:00";
+        return;
+      }
+
+      const hours = String(Math.floor(remaining / 3600)).padStart(2, '0');
+      const minutes = String(Math.floor((remaining % 3600) / 60)).padStart(2, '0');
+      const seconds = String(remaining % 60).padStart(2, '0');
+
+      document.getElementById("countdown").textContent = `${hours}:${minutes}:${seconds}`;
+    }
+
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
+  </script>
+</body>
+</html>
